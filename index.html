@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8f5" />
+    <meta name="description" content="Mapale, desarrolladora y constructora con más de 40 años de trayectoria. Edificios residenciales en Buenos Aires y casas en Canning." />
+    <meta property="og:title" content="Mapale — Desarrolladora y constructora" />
+    <meta property="og:description" content="Más de 40 años construyendo lugares para vivir." />
+    <title>Mapale — Desarrolladora y constructora</title>
+    <link rel="icon" href="assets/mapale-mark.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Manrope:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>document.documentElement.classList.add("js");</script>
+  </head>
+  <body>
+    <div class="page-loader" aria-hidden="true">
+      <img src="assets/mapale-mark.png" alt="" />
+      <span class="page-loader__line"></span>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Mapale, ir al inicio">
+        <img class="brand__mark" src="assets/mapale-mark.png" alt="" />
+        <img class="brand__wordmark" src="assets/mapale-wordmark.png" alt="Mapale, desarrolladora y constructora" />
+      </a>
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a class="is-current" href="index.html" aria-current="page">INICIO</a>
+        <a href="historia.html">HISTORIA</a>
+        <a href="proyectos.html">DESARROLLOS</a>
+        <a class="nav-contact" href="#contacto">CONTACTO <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button>
+    </header>
+
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Navegación móvil" hidden>
+      <a href="index.html">INICIO</a>
+      <a href="historia.html">HISTORIA</a>
+      <a href="proyectos.html">DESARROLLOS</a>
+      <a href="#contacto">CONTACTO</a>
+    </nav>
+
+    <main>
+      <section class="hero" id="inicio" aria-label="Presentación de Mapale">
+        <div class="hero__copy">
+          <div class="hero__ambient" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="hero__eyebrow"><span>DESARROLLADORA Y CONSTRUCTORA</span><span>BUENOS AIRES</span></div>
+          <div class="hero__headline-wrap">
+            <p class="hero__pretitle">MÁS DE 40 AÑOS DE TRAYECTORIA</p>
+            <h1>Espacios<br />para <em>vivir.</em></h1>
+            <p class="hero__description">Desarrollamos edificios y viviendas que acompañan nuevas historias. Experiencia, diseño y compromiso en cada etapa.</p>
+            <a class="button button--green" href="proyectos.html">CONOCÉ LOS DESARROLLOS <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+          <div class="hero__foot">
+            <span>CONSTRUIMOS FUTURO DESDE HACE CUATRO DÉCADAS</span>
+            <a href="#nosotros">DESCUBRÍ MAPALE <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="hero__visual" aria-label="Desarrollos residenciales de Mapale">
+          <div class="hero__backdrop hero__backdrop--city is-active" data-backdrop="0" aria-hidden="true"></div>
+          <div class="hero__backdrop hero__backdrop--work" data-backdrop="1" aria-hidden="true"></div>
+          <div class="hero__backdrop hero__backdrop--homes" data-backdrop="2" aria-hidden="true"></div>
+          <div class="hero__geometry" aria-hidden="true"></div>
+          <div class="hero__rings" aria-hidden="true"></div>
+          <div class="hero-slide is-active" data-slide="0" aria-hidden="false">
+            <div class="hero-slide__label"><span>DESARROLLO RESIDENCIAL</span><strong>EDIFICIOS EN BUENOS AIRES</strong></div>
+            <img class="hero-slide__asset hero-slide__asset--tower" src="assets/residential-building.png" alt="Imagen conceptual de un edificio residencial contemporáneo" fetchpriority="high" />
+          </div>
+          <div class="hero-slide" data-slide="1" aria-hidden="true">
+            <div class="hero-slide__label"><span>EN CADA ETAPA</span><strong>CONSTRUCCIÓN CON EXPERIENCIA</strong></div>
+            <img class="hero-slide__asset hero-slide__asset--site" src="assets/building-in-progress.png" alt="Imagen ilustrativa de una obra de edificio en construcción" loading="lazy" />
+          </div>
+          <div class="hero-slide" data-slide="2" aria-hidden="true">
+            <div class="hero-slide__label"><span>UNA FORMA DE HABITAR</span><strong>CASAS EN CANNING</strong></div>
+            <img class="hero-slide__asset hero-slide__asset--homes" src="assets/canning-homes.png" alt="Imagen conceptual de casas contemporáneas en Canning" loading="lazy" />
+          </div>
+          <div class="hero__controls" aria-label="Controles del slideshow">
+            <button class="slide-arrow" type="button" data-direction="-1" aria-label="Imagen anterior"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+            <div class="slide-dots" role="group" aria-label="Elegir imagen">
+              <button class="is-active" type="button" data-goto="0" aria-label="Ver edificios" aria-current="true"></button>
+              <button type="button" data-goto="1" aria-label="Ver obra" aria-current="false"></button>
+              <button type="button" data-goto="2" aria-label="Ver casas" aria-current="false"></button>
+            </div>
+            <button class="slide-arrow" type="button" data-direction="1" aria-label="Imagen siguiente"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+          </div>
+          <span class="hero__vertical">MAPALE / DESARROLLO Y CONSTRUCCIÓN</span>
+          <span class="image-note">IMÁGENES ILUSTRATIVAS</span>
+        </div>
+      </section>
+
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker__track">
+          <div class="ticker__group">
+            <span>EDIFICIOS RESIDENCIALES <i class="fa-solid fa-square-full"></i> DESARROLLO INMOBILIARIO <i class="fa-solid fa-square-full"></i> MÁS DE 40 AÑOS <i class="fa-solid fa-square-full"></i></span>
+            <span>EDIFICIOS RESIDENCIALES <i class="fa-solid fa-square-full"></i> DESARROLLO INMOBILIARIO <i class="fa-solid fa-square-full"></i> MÁS DE 40 AÑOS <i class="fa-solid fa-square-full"></i></span>
+          </div>
+          <div class="ticker__group">
+            <span>EDIFICIOS RESIDENCIALES <i class="fa-solid fa-square-full"></i> DESARROLLO INMOBILIARIO <i class="fa-solid fa-square-full"></i> MÁS DE 40 AÑOS <i class="fa-solid fa-square-full"></i></span>
+            <span>EDIFICIOS RESIDENCIALES <i class="fa-solid fa-square-full"></i> DESARROLLO INMOBILIARIO <i class="fa-solid fa-square-full"></i> MÁS DE 40 AÑOS <i class="fa-solid fa-square-full"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <section class="intro reveal" id="nosotros">
+        <div class="intro__orbit" aria-hidden="true"><span></span><span></span></div>
+        <img class="intro__watermark" src="assets/mapale-mark.png" alt="" aria-hidden="true" />
+        <div class="section-tag">QUIÉNES SOMOS</div>
+        <div class="intro__grid">
+          <div class="intro__aside">
+            <strong>MAPALE</strong>
+            <span>DESARROLLADORA Y CONSTRUCTORA</span>
+            <small>PROYECTOS RESIDENCIALES PENSADOS PARA PERSONAS REALES</small>
+            <figure class="intro__photo-wrap">
+              <img src="assets/construction-background.jpg" alt="Imagen ilustrativa de una obra residencial en construcción" loading="lazy" />
+              <figcaption><i class="fa-solid fa-building" aria-hidden="true"></i> Más de 40 años creando espacios</figcaption>
+            </figure>
+          </div>
+          <div class="intro__content">
+            <h2>Una historia que<br />se <em>construye.</em></h2>
+            <p class="intro__lead">Hace más de cuatro décadas que Mapale transforma ideas en lugares para vivir. Hoy seguimos desarrollando edificios en Buenos Aires y viviendas que expresan nuestra forma de entender la calidad, el diseño y la permanencia.</p>
+            <div class="intro__principles">
+              <article><h3>Trayectoria</h3><p>Cuatro décadas de experiencia aplicadas a cada nuevo desafío.</p></article>
+              <article><h3>Diseño</h3><p>Espacios funcionales, luminosos y pensados para ser habitados.</p></article>
+              <article><h3>Compromiso</h3><p>Atención al detalle desde la idea inicial hasta la obra terminada.</p></article>
+            </div>
+            <a class="text-link" href="historia.html">CONOCÉ NUESTRA HISTORIA <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="solutions" id="soluciones">
+        <div class="solutions__heading reveal">
+          <div class="section-tag">QUÉ HACEMOS</div>
+          <h2>De la idea<br /><em>a la obra.</em></h2>
+          <p>Integramos desarrollo, planificación y construcción para dar forma a espacios que se disfrutan todos los días.</p>
+        </div>
+        <div class="solutions__list">
+          <article class="solution-row reveal"><h3>Desarrollo inmobiliario</h3><p>Detectamos oportunidades y concebimos proyectos con sentido a largo plazo.</p><span class="solution-row__icon"><i class="fa-solid fa-city" aria-hidden="true"></i></span></article>
+          <article class="solution-row reveal"><h3>Edificios residenciales</h3><p>Viviendas urbanas que combinan ubicación, diseño y vida cotidiana.</p><span class="solution-row__icon"><i class="fa-solid fa-building" aria-hidden="true"></i></span></article>
+          <article class="solution-row reveal"><h3>Casas</h3><p>Espacios para crecer y disfrutar de una forma distinta de habitar.</p><span class="solution-row__icon"><i class="fa-solid fa-house" aria-hidden="true"></i></span></article>
+          <article class="solution-row reveal"><h3>Construcción integral</h3><p>Una mirada atenta a cada etapa, del proyecto al resultado final.</p><span class="solution-row__icon"><i class="fa-solid fa-helmet-safety" aria-hidden="true"></i></span></article>
+        </div>
+      </section>
+
+      <section class="products" id="desarrollos">
+        <div class="products__intro reveal">
+          <div class="section-tag">DESARROLLOS</div>
+          <h2>Proyectos que<br /><em>hacen ciudad.</em></h2>
+          <p>Presencia en distintos puntos de Buenos Aires y viviendas terminadas en Canning.</p>
+        </div>
+        <div class="products__cards">
+          <article class="project-card reveal">
+            <div class="project-card__visual project-card__visual--goyena"><img src="assets/residential-building.png" alt="Imagen conceptual de un edificio residencial" loading="lazy" /><span>IMAGEN ILUSTRATIVA</span></div>
+            <div class="project-card__details"><small>BUENOS AIRES</small><h3>Pedro<br />Goyena</h3><p>Un desarrollo residencial en uno de los corredores más buscados de la ciudad.</p><a href="proyectos.html#goyena" aria-label="Ver desarrollo de Pedro Goyena"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></div>
+          </article>
+          <article class="project-card reveal">
+            <div class="project-card__visual project-card__visual--gallo"><img src="assets/building-in-progress.png" alt="Imagen ilustrativa de un edificio en construcción" loading="lazy" /><span>IMAGEN ILUSTRATIVA</span></div>
+            <div class="project-card__details"><small>BUENOS AIRES</small><h3>Gallo y<br />Paraguay</h3><p>Una nueva propuesta de vivienda integrada a la vida urbana.</p><a href="proyectos.html#gallo" aria-label="Ver desarrollo de Gallo y Paraguay"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></div>
+          </article>
+          <article class="project-card reveal">
+            <div class="project-card__visual project-card__visual--biel"><img src="assets/residential-building.png" alt="Imagen conceptual de un edificio residencial" loading="lazy" /><span>IMAGEN ILUSTRATIVA</span></div>
+            <div class="project-card__details"><small>BUENOS AIRES</small><h3>Biel y Pedro<br />Goyena</h3><p>Arquitectura y ubicación para una experiencia de vida cotidiana.</p><a href="proyectos.html#biel" aria-label="Ver desarrollo de Biel y Pedro Goyena"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></div>
+          </article>
+        </div>
+        <a class="text-link products__more" href="proyectos.html">VER TODOS LOS DESARROLLOS <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+      </section>
+
+      <section class="values" id="criterios">
+        <div class="values__intro reveal">
+          <div class="section-tag">NUESTRA MIRADA</div>
+          <h2>Construir bien<br />es pensar <em>más allá.</em></h2>
+          <p>Cada decisión de proyecto busca equilibrar funcionalidad, calidad y relación con su entorno.</p>
+        </div>
+        <div class="values__cards">
+          <article class="value-card reveal"><i class="fa-solid fa-ruler-combined" aria-hidden="true"></i><small>DISEÑO</small><h3>Espacios<br />bien pensados</h3><p>Plantas que responden a la vida real, con luz, circulación y flexibilidad.</p></article>
+          <article class="value-card reveal"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><small>CONSTRUCCIÓN</small><h3>Calidad en<br />cada detalle</h3><p>Materiales y decisiones constructivas elegidos con criterio de permanencia.</p></article>
+          <article class="value-card reveal"><i class="fa-solid fa-tree-city" aria-hidden="true"></i><small>ENTORNO</small><h3>Vivir mejor<br />en cada lugar</h3><p>Proyectos que dialogan con el barrio y con quienes los van a habitar.</p></article>
+        </div>
+      </section>
+
+      <section class="statement reveal" aria-label="Nuestra trayectoria">
+        <div class="statement__top"><div class="section-tag">NUESTRA HISTORIA</div><span>EXPERIENCIA QUE SIGUE EN OBRA</span></div>
+        <div class="statement__grid">
+          <div class="statement__copy">
+            <h2>Más de 40 años.<br /><em>Una misma convicción.</em></h2>
+            <p>Creemos que un buen proyecto es el que mejora la vida de las personas y conserva su valor con el tiempo. Esa idea guía nuestra manera de desarrollar y construir.</p>
+            <div class="statement__pillars"><span>EXPERIENCIA</span><span>DISEÑO</span><span>CONFIANZA</span></div>
+            <a class="text-link" href="historia.html">LEÉ NUESTRA HISTORIA <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+          <div class="statement__number" aria-label="Más de 40 años de trayectoria"><strong>40<span>+</span></strong><small>AÑOS CONSTRUYENDO</small></div>
+        </div>
+      </section>
+
+      <section class="contact" id="contacto">
+        <div class="contact__top reveal">
+          <div class="section-tag">CONTACTO</div>
+          <div class="contact__intro"><h2>Hablemos de<br /><em>lo que viene.</em></h2><p>Si querés conocer un desarrollo o conversar sobre una oportunidad, escribinos. Nos interesa escuchar tu idea.</p></div>
+        </div>
+        <div class="contact__body reveal">
+          <form class="contact-form" id="contact-form" novalidate>
+            <p class="contact-form__eyebrow">UN MENSAJE, NUEVAS POSIBILIDADES</p>
+            <div class="contact-form__heading"><h3>Contanos qué estás buscando</h3><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></div>
+            <div class="contact-form__fields">
+              <label><span>NOMBRE</span><input type="text" name="nombre" autocomplete="name" required /></label>
+              <label><span>CORREO ELECTRÓNICO</span><input type="email" name="email" autocomplete="email" required /></label>
+              <label><span>ASUNTO</span><input type="text" name="asunto" required /></label>
+              <label class="contact-form__message"><span>MENSAJE</span><textarea name="mensaje" rows="4" required></textarea></label>
+            </div>
+            <div class="contact-form__footer"><p>Al continuar se abrirá tu aplicación de correo con el mensaje preparado.</p><button type="submit"><span>PREPARAR CONSULTA</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></button></div>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
+          <a class="contact__email" href="mailto:ventas@mapaleconstrucciones.com.ar"><span>ESCRIBINOS DIRECTAMENTE</span><strong>ventas@mapaleconstrucciones.com.ar</strong><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+        </div>
+      </section>
+
+      <section class="closing-statement reveal" aria-label="Nuestra visión">
+        <div class="section-tag">MAPALE</div>
+        <h2>Construimos para hoy.<br /><em>Pensamos en lo que sigue.</em></h2>
+        <a class="text-link" href="proyectos.html">EXPLORÁ LOS DESARROLLOS <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__main">
+        <a class="brand" href="index.html" aria-label="Mapale, volver al inicio"><img class="brand__mark" src="assets/mapale-mark.png" alt="" /><img class="brand__wordmark" src="assets/mapale-wordmark.png" alt="Mapale" /></a>
+        <p>DESARROLLADORA Y CONSTRUCTORA<br />MÁS DE 40 AÑOS DE TRAYECTORIA</p>
+        <a href="#inicio">VOLVER ARRIBA <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
+      </div>
+      <div class="site-footer__bottom"><small>© <span class="year">2026</span> MAPALE</small><small>BUENOS AIRES, ARGENTINA</small><span>Hecho por <a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">zigodev</a></span></div>
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>
