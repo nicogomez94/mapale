@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "history": {
+    "heroLine": "Cuatro décadas",
+    "heroAccent": "de construir.",
+    "heroIntro": "La experiencia de Mapale se reconoce en cada proyecto: una forma de pensar, desarrollar y construir lugares para la vida.",
+    "sectionLine": "Una trayectoria",
+    "sectionAccent": "hecha de proyectos.",
+    "paragraphs": [
+      "Mapale lleva más de 40 años dedicada al desarrollo y la construcción. A lo largo de ese camino, cada obra sumó experiencia, oficio y una manera de mirar el futuro con atención a las personas que van a habitar esos espacios.",
+      "Hoy esa trayectoria se proyecta en edificios residenciales en Buenos Aires y en casas terminadas en Canning. Cambian los lugares y las necesidades; permanece el compromiso con hacer las cosas bien."
+    ],
+    "milestoneLine": "La experiencia se ve",
+    "milestoneAccent": "en cada decisión.",
+    "milestones": [
+      { "title": "Mirar el lugar", "text": "Entender el entorno y las personas que van a vivir allí antes de definir cada proyecto." },
+      { "title": "Pensar el espacio", "text": "Resolver con claridad la distribución, la luz y los detalles que hacen mejor la vida cotidiana." },
+      { "title": "Construir con criterio", "text": "Dar continuidad a cada idea con atención durante el desarrollo y la ejecución de la obra." }
+    ],
+    "homeLine": "Más de 40 años.",
+    "homeAccent": "Una misma convicción.",
+    "homeSummary": "Creemos que un buen proyecto es el que mejora la vida de las personas y conserva su valor con el tiempo. Esa idea guía nuestra manera de desarrollar y construir."
+  },
+  "projects": [
+    {
+      "id": "goyena",
+      "title": "Pedro Goyena",
+      "location": "Pedro Goyena, Caballito, Buenos Aires",
+      "type": "Edificio residencial",
+      "status": "Consultá disponibilidad",
+      "summary": "Un desarrollo residencial en uno de los corredores más buscados de la ciudad.",
+      "description": "Un desarrollo que toma como punto de partida una ubicación con vida de barrio, servicios y conexión con la ciudad. Consultanos para conocer sus características y disponibilidad.",
+      "features": ["Ubicación en Caballito", "Viviendas residenciales", "Consultas comerciales abiertas"],
+      "cover": "assets/residential-building.png",
+      "background": "assets/caballito-background.jpg",
+      "gallery": [],
+      "imageNote": "IMAGEN ILUSTRATIVA",
+      "featured": true
+    },
+    {
+      "id": "gallo",
+      "title": "Gallo y Paraguay",
+      "location": "Gallo y Paraguay, Buenos Aires",
+      "type": "Edificio residencial",
+      "status": "Consultá disponibilidad",
+      "summary": "Una nueva propuesta de vivienda integrada a la vida urbana.",
+      "description": "Un proyecto de vivienda urbana pensado para aprovechar cada metro y conectar con el ritmo cotidiano de su entorno. Escribinos para conocer más.",
+      "features": ["Viviendas urbanas", "Ubicación en Buenos Aires"],
+      "cover": "assets/building-in-progress.png",
+      "background": "assets/construction-background.jpg",
+      "gallery": [],
+      "imageNote": "IMAGEN ILUSTRATIVA",
+      "featured": true
+    },
+    {
+      "id": "biel",
+      "title": "Biel y Pedro Goyena",
+      "location": "Biel y Pedro Goyena, Caballito, Buenos Aires",
+      "type": "Edificio residencial",
+      "status": "Consultá disponibilidad",
+      "summary": "Arquitectura y ubicación para una experiencia de vida cotidiana.",
+      "description": "Arquitectura residencial que busca combinar una buena ubicación con espacios claros y funcionales. Podemos contarte los detalles del desarrollo.",
+      "features": ["Ubicación en Caballito", "Viviendas residenciales"],
+      "cover": "assets/residential-building.png",
+      "background": "assets/caballito-background.jpg",
+      "gallery": [],
+      "imageNote": "IMAGEN ILUSTRATIVA",
+      "featured": true
+    },
+    {
+      "id": "canning",
+      "title": "Casas en Canning",
+      "location": "Canning, Buenos Aires",
+      "type": "Casas terminadas",
+      "status": "Terminadas",
+      "summary": "Hogares para disfrutar de más espacio, verde y vida en familia.",
+      "description": "Viviendas terminadas que reflejan otra escala de nuestro trabajo: hogares para disfrutar de más espacio, verde y vida en familia.",
+      "features": ["Casas terminadas", "Ubicación en Canning"],
+      "cover": "assets/canning-homes.png",
+      "background": "assets/canning-background.jpg",
+      "gallery": [],
+      "imageNote": "IMAGEN ILUSTRATIVA",
+      "featured": false
+    }
+  ]
+}

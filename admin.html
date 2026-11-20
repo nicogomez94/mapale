@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://api.github.com; img-src 'self' https: data:; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; base-uri 'none'; form-action 'self'" />
+    <meta name="theme-color" content="#102b20" />
+    <title>Panel de contenidos — Mapale</title>
+    <link rel="icon" href="assets/mapale-mark.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Manrope:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <header class="admin-header"><a href="index.html" class="admin-brand"><img src="assets/mapale-mark.png" alt="" /><img src="assets/mapale-wordmark.png" alt="Mapale" /></a><span>PANEL DE CONTENIDOS</span><a href="index.html" class="admin-site-link">VER SITIO ↗</a></header>
+
+    <main class="login-screen" id="login-screen">
+      <div class="login-intro"><span class="eyebrow">MAPALE / ADMINISTRACIÓN</span><h1>El contenido,<br /><em>en tus manos.</em></h1><p>Editá los desarrollos y la historia. Cada publicación queda guardada en el repositorio de Mapale y se actualiza en Render.</p><div class="login-accent">DESARROLLOS <span>·</span> HISTORIA <span>·</span> IMÁGENES</div></div>
+      <form class="login-card" id="login-form"><span class="eyebrow">ACCESO AL PANEL</span><h2>Ingresar con GitHub</h2><p>Usá un token personal de acceso limitado al repositorio <strong>nicogomez94/mapale</strong>, con permiso <strong>Contents: Read and write</strong>. El token se usa solo en esta pestaña y no se guarda en el sitio.</p><label for="github-token">TOKEN DE GITHUB</label><input id="github-token" name="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..." required /><button type="submit" class="primary-button">ABRIR PANEL <span>↗</span></button><p class="login-help"><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Crear token de acceso ↗</a></p><p id="login-status" class="status" role="status" aria-live="polite"></p></form>
+    </main>
+
+    <main class="workspace" id="workspace" hidden>
+      <aside class="sidebar"><div class="sidebar__top"><span class="eyebrow">CONTENIDOS</span><h2>Tu espacio<br />de edición.</h2></div><nav aria-label="Secciones del panel"><button type="button" id="tab-projects" class="tab is-active">01 <span>DESARROLLOS</span><b id="project-count">0</b></button><button type="button" id="tab-history" class="tab">02 <span>HISTORIA</span><b>↗</b></button></nav><div class="sidebar__bottom"><p>Los cambios se publican al guardar. Render puede tardar unos minutos en mostrarlos.</p><button type="button" id="logout-button">CERRAR SESIÓN ↗</button></div></aside>
+      <div class="editor-shell"><div class="editor-top"><div><span class="eyebrow">MAPALE / EDICIÓN</span><h1 id="editor-heading">Desarrollos</h1></div><div class="editor-actions"><a href="proyectos.html" target="_blank" rel="noopener noreferrer">VISTA PÚBLICA ↗</a><button type="button" class="primary-button" id="publish-button">PUBLICAR CAMBIOS <span>↗</span></button></div></div><p id="editor-status" class="status editor-status" role="status" aria-live="polite"></p>
+        <section id="projects-panel" class="editor-panel"><div class="panel-heading"><div><span class="eyebrow">PORTAFOLIO</span><h2>Desarrollos</h2><p>Seleccioná una ficha para editarla. Cada una tiene su propia página pública.</p></div><button type="button" id="add-project" class="outline-button">+ NUEVO DESARROLLO</button></div><div class="project-editor-layout"><div class="project-picker" id="project-picker"></div><form id="project-form" class="form-grid" novalidate><div class="form-title"><div><span class="eyebrow">FICHA DEL DESARROLLO</span><h3 id="project-form-title">Seleccioná un desarrollo</h3></div><div class="form-title__actions"><button type="button" id="move-project-up" title="Subir">↑</button><button type="button" id="move-project-down" title="Bajar">↓</button><button type="button" id="delete-project" class="danger-button">ELIMINAR</button></div></div>
+            <label>Nombre del desarrollo <input name="title" required maxlength="100" /></label>
+            <div class="form-row"><label>Ubicación <input name="location" required maxlength="160" placeholder="Barrio, ciudad" /></label><label>Tipo <input name="type" required maxlength="100" placeholder="Edificio residencial" /></label></div>
+            <label>Estado / disponibilidad <input name="status" maxlength="100" placeholder="Consultar disponibilidad" /></label>
+            <label>Descripción breve <textarea name="summary" rows="3" required maxlength="320"></textarea><small>Aparece en los listados y en la cabecera de la ficha.</small></label>
+            <label>Descripción completa <textarea name="description" rows="7" required></textarea></label>
+            <label>Características <textarea name="features" rows="4" placeholder="Una característica por línea"></textarea><small>Una por línea. No publiques medidas o prestaciones que no estén confirmadas.</small></label>
+            <div class="form-divider"><span>IMÁGENES</span></div>
+            <label>Imagen principal <input name="cover" placeholder="assets/uploads/imagen.jpg o URL https://..." /></label><label class="upload-label">SUBIR IMAGEN PRINCIPAL <input id="cover-upload" type="file" accept="image/png,image/jpeg,image/webp" /></label>
+            <label>Imagen de fondo <input name="background" placeholder="assets/uploads/fondo.jpg o URL https://..." /></label><label class="upload-label">SUBIR IMAGEN DE FONDO <input id="background-upload" type="file" accept="image/png,image/jpeg,image/webp" /></label>
+            <div class="form-row"><label>Presentación de imagen <select name="imageMode"><option value="cutout">Recorte sobre fondo</option><option value="photo">Fotografía completa</option></select></label><label>Nota de imagen <input name="imageNote" placeholder="IMAGEN ILUSTRATIVA" /><small>Dejala vacía si son fotos reales del proyecto.</small></label></div>
+            <label>Galería (una URL por línea) <textarea name="gallery" rows="4"></textarea></label><label class="upload-label">SUBIR IMÁGENES A LA GALERÍA <input id="gallery-upload" type="file" accept="image/png,image/jpeg,image/webp" multiple /></label>
+            <label class="check-row"><input name="featured" type="checkbox" /> Mostrar en la portada</label>
+            <div class="form-footer"><span>URL de la ficha: <a id="project-public-url" href="#" target="_blank" rel="noopener noreferrer"></a></span><span>Usá “Publicar cambios” arriba para guardar.</span></div>
+          </form></div></section>
+        <section id="history-panel" class="editor-panel" hidden><div class="panel-heading"><div><span class="eyebrow">TRAYECTORIA</span><h2>Historia</h2><p>Estos textos actualizan la página de historia y el resumen de la portada.</p></div><a class="outline-button" href="historia.html" target="_blank" rel="noopener noreferrer">VER HISTORIA ↗</a></div><form id="history-form" class="form-grid history-form" novalidate><div class="form-divider"><span>CABECERA DE HISTORIA</span></div><div class="form-row"><label>Primera línea <input name="heroLine" required /></label><label>Frase destacada <input name="heroAccent" required /></label></div><label>Introducción <textarea name="heroIntro" rows="3" required></textarea></label><div class="form-divider"><span>RELATO PRINCIPAL</span></div><div class="form-row"><label>Primera línea del título <input name="sectionLine" required /></label><label>Frase destacada <input name="sectionAccent" required /></label></div><label>Párrafos de historia <textarea name="paragraphs" rows="10" required></textarea><small>Separá los párrafos con una línea en blanco.</small></label><div class="form-divider"><span>PRINCIPIOS</span></div><div class="form-row"><label>Primera línea del título <input name="milestoneLine" /></label><label>Frase destacada <input name="milestoneAccent" /></label></div><div id="milestone-fields" class="milestone-fields"></div><div class="form-divider"><span>RESUMEN EN PORTADA</span></div><div class="form-row"><label>Primera línea <input name="homeLine" /></label><label>Frase destacada <input name="homeAccent" /></label></div><label>Resumen <textarea name="homeSummary" rows="4"></textarea></label></form></section>
+      </div>
+    </main>
+    <script src="admin.js" defer></script>
+  </body>
+</html>

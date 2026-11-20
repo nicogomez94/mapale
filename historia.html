@@ -39,8 +39,8 @@
       <section class="inner-hero" id="inicio">
         <div class="inner-hero__copy">
           <div class="breadcrumb"><a href="index.html">INICIO</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span>HISTORIA</span></div>
-          <h1>Cuatro décadas<br />de <em>construir.</em></h1>
-          <p>La experiencia de Mapale se reconoce en cada proyecto: una forma de pensar, desarrollar y construir lugares para la vida.</p>
+          <h1><span data-history="heroLine">Cuatro décadas</span><br /><em data-history="heroAccent">de construir.</em></h1>
+          <p data-history="heroIntro">La experiencia de Mapale se reconoce en cada proyecto: una forma de pensar, desarrollar y construir lugares para la vida.</p>
         </div>
         <div class="inner-hero__visual inner-hero__visual--number"><strong>40<span>+</span></strong><small>AÑOS DE TRAYECTORIA</small></div>
       </section>
@@ -49,9 +49,8 @@
         <div class="editorial__grid">
           <div class="section-tag">NUESTRA HISTORIA</div>
           <div>
-            <h2>Una trayectoria<br />hecha de <em>proyectos.</em></h2>
-            <p>Mapale lleva más de 40 años dedicada al desarrollo y la construcción. A lo largo de ese camino, cada obra sumó experiencia, oficio y una manera de mirar el futuro con atención a las personas que van a habitar esos espacios.</p>
-            <p>Hoy esa trayectoria se proyecta en edificios residenciales en Buenos Aires y en casas terminadas en Canning. Cambian los lugares y las necesidades; permanece el compromiso con hacer las cosas bien.</p>
+            <h2><span data-history="sectionLine">Una trayectoria</span><br /><em data-history="sectionAccent">hecha de proyectos.</em></h2>
+            <div id="history-paragraphs"><p>Mapale lleva más de 40 años dedicada al desarrollo y la construcción.</p></div>
           </div>
         </div>
         <div class="editorial__photo" role="img" aria-label="Imagen ilustrativa de una obra residencial"><span>IMAGEN ILUSTRATIVA</span></div>
@@ -59,12 +58,8 @@
 
       <section class="milestones">
         <div class="section-tag">LO QUE NOS GUÍA</div>
-        <h2>La experiencia se ve<br />en <em>cada decisión.</em></h2>
-        <div class="milestones__grid">
-          <article class="reveal"><i class="fa-solid fa-drafting-compass" aria-hidden="true"></i><h3>Mirar el lugar</h3><p>Entender el entorno y las personas que van a vivir allí antes de definir cada proyecto.</p></article>
-          <article class="reveal"><i class="fa-solid fa-ruler-combined" aria-hidden="true"></i><h3>Pensar el espacio</h3><p>Resolver con claridad la distribución, la luz y los detalles que hacen mejor la vida cotidiana.</p></article>
-          <article class="reveal"><i class="fa-solid fa-helmet-safety" aria-hidden="true"></i><h3>Construir con criterio</h3><p>Dar continuidad a cada idea con atención durante el desarrollo y la ejecución de la obra.</p></article>
-        </div>
+        <h2><span data-history="milestoneLine">La experiencia se ve</span><br /><em data-history="milestoneAccent">en cada decisión.</em></h2>
+        <div class="milestones__grid" id="history-milestones"></div>
       </section>
 
       <section class="inner-cta reveal">
@@ -83,5 +78,6 @@
       <div class="site-footer__bottom"><small>© <span class="year">2026</span> MAPALE</small><small>BUENOS AIRES, ARGENTINA</small><span>Hecho por <a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">zigodev</a></span></div>
     </footer>
     <script src="main.js"></script>
+    <script src="site-content.js" defer></script>
   </body>
 </html>

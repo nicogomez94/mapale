@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8f5" />
+    <meta name="description" content="Conocé este desarrollo de Mapale." />
+    <title>Desarrollo — Mapale</title>
+    <link rel="icon" href="assets/mapale-mark.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Manrope:wght@400;500;600;700&amp;family=Syne:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>document.documentElement.classList.add("js");</script>
+  </head>
+  <body>
+    <div class="page-loader" aria-hidden="true"><img src="assets/mapale-mark.png" alt="" /><span class="page-loader__line"></span></div>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Mapale, ir al inicio"><img class="brand__mark" src="assets/mapale-mark.png" alt="" /><img class="brand__wordmark" src="assets/mapale-wordmark.png" alt="Mapale, desarrolladora y constructora" /></a>
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a href="index.html">INICIO</a>
+        <a href="historia.html">HISTORIA</a>
+        <a href="proyectos.html">DESARROLLOS</a>
+        <a class="nav-contact" href="index.html#contacto">CONTACTO <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button>
+    </header>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Navegación móvil" hidden>
+      <a href="index.html">INICIO</a>
+      <a href="historia.html">HISTORIA</a>
+      <a href="proyectos.html">DESARROLLOS</a>
+      <a href="index.html#contacto">CONTACTO</a>
+    </nav>
+
+    <main class="inner-page" id="project-detail">
+      <section class="detail-hero" id="inicio">
+        <div class="detail-hero__copy">
+          <div class="breadcrumb"><a href="index.html">INICIO</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><a href="proyectos.html">DESARROLLOS</a></div>
+          <p class="detail-kicker" id="detail-type">DESARROLLO</p>
+          <h1 id="detail-title">Desarrollo</h1>
+          <p id="detail-summary"></p>
+          <div class="detail-hero__meta"><span id="detail-location"></span><span id="detail-status"></span></div>
+        </div>
+        <div class="detail-hero__visual" id="detail-visual"></div>
+      </section>
+      <section class="detail-body">
+        <div class="detail-body__heading"><div class="section-tag">EL PROYECTO</div><h2>Un lugar para<br /><em>lo que viene.</em></h2></div>
+        <div class="detail-body__content"><p id="detail-description"></p><ul id="detail-features"></ul></div>
+      </section>
+      <section class="detail-gallery-section"><div class="section-tag">IMÁGENES</div><div class="detail-gallery" id="detail-gallery"></div></section>
+      <section class="detail-contact"><div class="section-tag">CONVERSEMOS</div><h2>Conocé más sobre<br /><em>este desarrollo.</em></h2><a class="button button--green" id="detail-contact" href="mailto:ventas@mapaleconstrucciones.com.ar">CONSULTAR DISPONIBILIDAD <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></section>
+    </main>
+    <footer class="site-footer">
+      <div class="site-footer__main">
+        <a class="brand" href="index.html" aria-label="Mapale, volver al inicio"><img class="brand__mark" src="assets/mapale-mark.png" alt="" /><img class="brand__wordmark" src="assets/mapale-wordmark.png" alt="Mapale" /></a>
+        <p>DESARROLLADORA Y CONSTRUCTORA<br />MÁS DE 40 AÑOS DE TRAYECTORIA</p>
+        <a href="#inicio">VOLVER ARRIBA <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
+      </div>
+      <div class="site-footer__bottom"><small>© <span class="year">2026</span> MAPALE</small><small>BUENOS AIRES, ARGENTINA</small><span>Hecho por <a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">zigodev</a></span></div>
+    </footer>
+    <script src="main.js"></script>
+    <script src="site-content.js" defer></script>
+  </body>
+</html>
