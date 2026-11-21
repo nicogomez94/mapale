@@ -5,6 +5,8 @@ const projectForm = document.querySelector("#project-form");
 const historyForm = document.querySelector("#history-form");
 const companyForm = document.querySelector("#company-form");
 const projectPicker = document.querySelector("#project-picker");
+const projectDialog = document.querySelector("#project-dialog");
+const imageThumbnails = document.querySelector("#image-thumbnails");
 const statusElement = document.querySelector("#editor-status");
 
 let token = "";
@@ -13,6 +15,9 @@ let contentVersion = 0;
 let selectedId = "";
 let activeTab = "projects";
 let dirty = false;
+let creatingProject = false;
+let projectSnapshot = null;
+let dirtyBeforeProjectDialog = false;
 
 function setStatus(message, error = false, target = statusElement) {
   target.textContent = message;
@@ -73,15 +78,76 @@ function saveProjectDraft() {
     "nearby",
     "mapUrl",
     "brochure",
-    "cover",
-    "background",
     "imageMode",
     "imageNote"
   ];
   for (const key of keys) project[key] = field(projectForm, key).value.trim();
   project.features = field(projectForm, "features").value.split("\n").map((item) => item.trim()).filter(Boolean);
-  project.gallery = field(projectForm, "gallery").value.split("\n").map((item) => item.trim()).filter(Boolean);
   project.featured = field(projectForm, "featured").checked;
+}
+
+function projectImages(project) {
+  return [...new Set([project.cover, project.background, ...(project.gallery || [])].filter(Boolean))];
+}
+
+function syncProjectImages(project, images) {
+  const unique = [...new Set(images.filter(Boolean))];
+  if (!unique.includes(project.cover)) project.cover = unique[0] || "";
+  if (!unique.includes(project.background)) project.background = project.cover || unique[0] || "";
+  project.gallery = unique.filter((image) => image !== project.cover && image !== project.background);
+}
+
+function renderImageThumbnails() {
+  const project = projectById(selectedId);
+  const images = project ? projectImages(project) : [];
+  imageThumbnails.replaceChildren();
+  document.querySelector("#empty-images").hidden = images.length > 0;
+
+  for (const image of images) {
+    const card = document.createElement("article");
+    card.className = "image-card";
+    card.classList.toggle("is-cover", image === project.cover);
+    const preview = document.createElement("img");
+    preview.src = image;
+    preview.alt = image === project.cover ? "Imagen de portada" : "Imagen del desarrollo";
+    preview.loading = "lazy";
+    card.append(preview);
+
+    if (image === project.cover) {
+      const badge = document.createElement("span");
+      badge.className = "image-card__badge";
+      badge.textContent = "PORTADA";
+      card.append(badge);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "image-card__actions";
+    const coverButton = document.createElement("button");
+    coverButton.type = "button";
+    coverButton.disabled = image === project.cover;
+    coverButton.innerHTML = image === project.cover ? '<i class="fa-solid fa-check" aria-hidden="true"></i> PORTADA ACTUAL' : '<i class="fa-regular fa-image" aria-hidden="true"></i> ELEGIR PORTADA';
+    coverButton.addEventListener("click", () => {
+      const oldCover = project.cover;
+      project.cover = image;
+      if (!project.background || project.background === oldCover) project.background = image;
+      syncProjectImages(project, images);
+      renderImageThumbnails();
+      markDirty();
+    });
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "remove-image";
+    removeButton.setAttribute("aria-label", "Eliminar imagen");
+    removeButton.innerHTML = '<i class="fa-solid fa-trash-can" aria-hidden="true"></i>';
+    removeButton.addEventListener("click", () => {
+      syncProjectImages(project, images.filter((entry) => entry !== image));
+      renderImageThumbnails();
+      markDirty();
+    });
+    actions.append(coverButton, removeButton);
+    card.append(actions);
+    imageThumbnails.append(card);
+  }
 }
 
 function showProjectForm() {
@@ -112,15 +178,13 @@ function showProjectForm() {
     "nearby",
     "mapUrl",
     "brochure",
-    "cover",
-    "background",
     "imageMode",
     "imageNote",
     "featured"
   ];
   for (const key of keys) setField(projectForm, key, project[key]);
   setField(projectForm, "features", (project.features || []).join("\n"));
-  setField(projectForm, "gallery", (project.gallery || []).join("\n"));
+  renderImageThumbnails();
 
   const url = `desarrollo.html?id=${encodeURIComponent(project.id)}`;
   const link = document.querySelector("#project-public-url");
@@ -134,20 +198,54 @@ function renderProjectPicker() {
   for (const project of site.projects) {
     const button = document.createElement("button");
     button.type = "button";
-    button.classList.toggle("is-active", project.id === selectedId);
     const title = document.createElement("strong");
     title.textContent = project.title || "Nuevo desarrollo";
     const detail = document.createElement("small");
     detail.textContent = project.location || "SIN UBICACIÓN";
-    button.append(title, detail);
+    const category = document.createElement("span");
+    category.className = "project-category-label";
+    category.textContent = site.categories?.find((entry) => entry.id === project.category)?.label || "SIN CATEGORÍA";
+    button.append(title, detail, category);
     button.addEventListener("click", () => {
-      saveProjectDraft();
       selectedId = project.id;
-      renderProjectPicker();
-      showProjectForm();
+      openProjectDialog(false);
     });
     projectPicker.append(button);
   }
+}
+
+function openProjectDialog(isNew) {
+  const project = projectById(selectedId);
+  if (!project) return;
+  creatingProject = isNew;
+  dirtyBeforeProjectDialog = dirty;
+  projectSnapshot = isNew ? null : structuredClone(project);
+  showProjectForm();
+  projectDialog.showModal();
+  document.body.classList.add("has-dialog");
+  window.setTimeout(() => field(projectForm, "title").focus(), 0);
+}
+
+function closeProjectDialog(save) {
+  const project = projectById(selectedId);
+  if (save && project) {
+    saveProjectDraft();
+    markDirty();
+  } else if (creatingProject && project) {
+    site.projects = site.projects.filter((entry) => entry !== project);
+    selectedId = site.projects[0]?.id || "";
+  } else if (project && projectSnapshot) {
+    Object.assign(project, projectSnapshot);
+  }
+  if (!save) {
+    dirty = dirtyBeforeProjectDialog;
+    setStatus(dirty ? "Hay cambios sin publicar." : "Panel listo. Seleccioná un contenido para editar.");
+  }
+  creatingProject = false;
+  projectSnapshot = null;
+  projectDialog.close();
+  document.body.classList.remove("has-dialog");
+  renderProjectPicker();
 }
 
 function renderHistoryForm() {
@@ -228,7 +326,9 @@ function saveCompanyDraft() {
 }
 
 function showTab(name) {
-  if (activeTab === "projects") saveProjectDraft();
+  if (activeTab === "projects") {
+    if (projectDialog.open) saveProjectDraft();
+  }
   else if (activeTab === "history") saveHistoryDraft();
   else saveCompanyDraft();
   activeTab = name;
@@ -291,7 +391,7 @@ async function publish() {
   button.disabled = true;
   setStatus("Guardando cambios en la base de datos…");
   try {
-    saveProjectDraft();
+    if (projectDialog.open) saveProjectDraft();
     saveHistoryDraft();
     saveCompanyDraft();
     validateSite();
@@ -321,8 +421,16 @@ async function uploadFromInput(input, target) {
       const formData = new FormData();
       formData.append("file", file);
       const uploaded = await api("/api/admin/assets", { method: "POST", body: formData });
-      const destination = field(projectForm, target === "gallery" ? "gallery" : target);
-      destination.value = target === "gallery" ? [destination.value.trim(), uploaded.path].filter(Boolean).join("\n") : uploaded.path;
+      if (target === "images") {
+        const project = projectById(selectedId);
+        const images = [...projectImages(project), uploaded.path];
+        if (!project.cover) project.cover = uploaded.path;
+        if (!project.background) project.background = uploaded.path;
+        syncProjectImages(project, images);
+        renderImageThumbnails();
+      } else {
+        field(projectForm, target).value = uploaded.path;
+      }
     }
     markDirty();
     setStatus("Archivos subidos. Publicá los cambios para agregarlos a la ficha.");
@@ -380,7 +488,6 @@ document.querySelector("#logout-button").addEventListener("click", () => {
   loginScreen.hidden = false;
 });
 document.querySelector("#add-project").addEventListener("click", () => {
-  saveProjectDraft();
   const project = {
     id: `nuevo-${Date.now()}`,
     title: "",
@@ -406,10 +513,7 @@ document.querySelector("#add-project").addEventListener("click", () => {
   };
   site.projects.push(project);
   selectedId = project.id;
-  renderProjectPicker();
-  showProjectForm();
-  markDirty();
-  field(projectForm, "title").focus();
+  openProjectDialog(true);
 });
 document.querySelector("#delete-project").addEventListener("click", () => {
   const project = projectById(selectedId);
@@ -417,8 +521,11 @@ document.querySelector("#delete-project").addEventListener("click", () => {
   site.projects = site.projects.filter((entry) => entry !== project);
   selectedId = site.projects[0]?.id || "";
   renderProjectPicker();
-  showProjectForm();
   markDirty();
+  creatingProject = false;
+  projectSnapshot = null;
+  projectDialog.close();
+  document.body.classList.remove("has-dialog");
 });
 
 function moveProject(offset) {
@@ -439,10 +546,16 @@ companyForm.addEventListener("input", markDirty);
 projectForm.addEventListener("submit", (event) => event.preventDefault());
 historyForm.addEventListener("submit", (event) => event.preventDefault());
 companyForm.addEventListener("submit", (event) => event.preventDefault());
-document.querySelector("#cover-upload").addEventListener("change", (event) => uploadFromInput(event.target, "cover"));
-document.querySelector("#background-upload").addEventListener("change", (event) => uploadFromInput(event.target, "background"));
-document.querySelector("#gallery-upload").addEventListener("change", (event) => uploadFromInput(event.target, "gallery"));
+document.querySelector("#gallery-upload").addEventListener("change", (event) => uploadFromInput(event.target, "images"));
 document.querySelector("#brochure-upload").addEventListener("change", (event) => uploadFromInput(event.target, "brochure"));
+document.querySelector("#save-project-draft").addEventListener("click", () => closeProjectDialog(true));
+document.querySelector("#cancel-project").addEventListener("click", () => closeProjectDialog(false));
+document.querySelector("#close-project-dialog").addEventListener("click", () => closeProjectDialog(false));
+document.querySelector("[data-close-dialog]").addEventListener("click", () => closeProjectDialog(false));
+projectDialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeProjectDialog(false);
+});
 window.addEventListener("beforeunload", (event) => {
   if (dirty) event.preventDefault();
 });
