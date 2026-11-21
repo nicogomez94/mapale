@@ -1,6 +1,6 @@
 # Mapale
 
-Sitio de Mapale, desarrolladora y constructora. La estructura visual parte del sitio de Navychem, pero este proyecto tiene archivos, imágenes y repositorio propios.
+Sitio de Mapale, constructora y desarrolladora con más de 50 años de trayectoria. La estructura visual parte del sitio de Navychem, pero este proyecto tiene archivos, imágenes y repositorio propios.
 
 ## Páginas
 
@@ -20,7 +20,7 @@ Abrir `http://localhost:8788/`.
 
 ## Contenido y recursos
 
-- `content/site.json` guarda los desarrollos y la historia. Las páginas públicas lo cargan al abrirse.
+- `content/site.json` guarda los datos de contacto, categorías, desarrollos y la historia. Las páginas públicas lo cargan al abrirse.
 - Logotipo extraído de `assets/logo-original.pdf`, proporcionado por el cliente.
 - Imágenes de arquitectura y obra generadas para este proyecto. Son ilustrativas y no representan fotografías documentales de los desarrollos de Mapale.
 - Ubicaciones, trayectoria y correo comercial proporcionados por el cliente.
@@ -38,6 +38,6 @@ Para acceder, crear un **fine-grained personal access token** en GitHub con esta
 
 Pegar el token en el panel. Se conserva solo en la memoria de esa pestaña; al recargar se vuelve a pedir. No agregarlo al repositorio, a una URL ni a capturas de pantalla. Si otra persona debe editar, darle acceso de escritura al repositorio y pedirle que cree su propio token limitado a Mapale.
 
-Se pueden crear, editar, quitar y ordenar desarrollos; modificar título, ubicación, estado, descripciones, características, imagen principal, fondo, galería y presencia en portada. La historia permite editar cabecera, relato, principios y resumen de portada. Las imágenes se suben al repositorio en `assets/uploads/` (PNG, JPG o WebP, máximo 5 MB por archivo). Tras subir imágenes hay que pulsar **Publicar cambios** para incluirlas en la ficha.
+Se pueden crear, editar, quitar y ordenar desarrollos; elegir una categoría; modificar título, ubicación, barrio, estado, año, unidades, descripciones, conectividad, mapa, características, imagen principal, fondo, galería, brochure y presencia en portada. La historia permite editar cabecera, relato, principios y resumen de portada. La sección Datos de contacto administra teléfono, WhatsApp, email y dirección de oficina. Las imágenes se suben al repositorio en `assets/uploads/` (PNG, JPG o WebP, máximo 5 MB por archivo) y los brochures se admiten en PDF hasta 12 MB. Tras subir archivos hay que pulsar **Publicar cambios** para incluirlos en la ficha.
 
 Los identificadores de las fichas existentes no cambian al editar el título. Una ficha nueva recibe una URL basada en su nombre cuando se publica por primera vez. Si dos editores modifican el contenido al mismo tiempo, el panel evita sobreescribir el cambio ajeno y solicita recargar.

@@ -38,28 +38,52 @@
       <section class="detail-hero" id="inicio">
         <div class="detail-hero__copy">
           <div class="breadcrumb"><a href="index.html">INICIO</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><a href="proyectos.html">DESARROLLOS</a></div>
-          <p class="detail-kicker" id="detail-type">DESARROLLO</p>
+          <p class="detail-kicker"><span id="detail-category">DESARROLLO</span> · <span id="detail-type"></span></p>
           <h1 id="detail-title">Desarrollo</h1>
           <p id="detail-summary"></p>
           <div class="detail-hero__meta"><span id="detail-location"></span><span id="detail-status"></span></div>
+          <div class="detail-hero__meta detail-hero__meta--extra" id="detail-extra-meta"></div>
         </div>
         <div class="detail-hero__visual" id="detail-visual"></div>
       </section>
       <section class="detail-body">
         <div class="detail-body__heading"><div class="section-tag">EL PROYECTO</div><h2>Un lugar para<br /><em>lo que viene.</em></h2></div>
-        <div class="detail-body__content"><p id="detail-description"></p><ul id="detail-features"></ul></div>
+        <div class="detail-body__content">
+          <p id="detail-description"></p>
+          <ul id="detail-features"></ul>
+          <div class="detail-location">
+            <span>CONECTIVIDAD Y UBICACIÓN</span>
+            <p id="detail-nearby"></p>
+            <div class="detail-location__links">
+              <a class="text-link" id="detail-map" href="#" target="_blank" rel="noopener noreferrer" hidden>VER EN MAPA <i class="fa-solid fa-location-dot" aria-hidden="true"></i></a>
+              <a class="text-link" id="detail-brochure" href="#" target="_blank" rel="noopener noreferrer" hidden>DESCARGAR BROCHURE <i class="fa-solid fa-file-pdf" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
       </section>
-      <section class="detail-gallery-section"><div class="section-tag">IMÁGENES</div><div class="detail-gallery" id="detail-gallery"></div></section>
-      <section class="detail-contact"><div class="section-tag">CONVERSEMOS</div><h2>Conocé más sobre<br /><em>este desarrollo.</em></h2><a class="button button--green" id="detail-contact" href="mailto:ventas@mapaleconstrucciones.com.ar">CONSULTAR DISPONIBILIDAD <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></section>
+      <section class="detail-gallery-section">
+        <div class="section-tag">IMÁGENES Y AVANCE DE OBRA</div>
+        <p class="detail-gallery-empty" id="detail-gallery-empty">Las fotografías y avances se incorporarán desde el panel a medida que estén disponibles.</p>
+        <div class="detail-gallery" id="detail-gallery"></div>
+      </section>
+      <section class="detail-contact">
+        <div class="section-tag">QUIERO MÁS INFO</div>
+        <h2>Conocé más sobre<br /><em>este desarrollo.</em></h2>
+        <div class="detail-contact__actions">
+          <a class="button button--green" id="detail-contact" href="mailto:ventas@mapaleconstrucciones.com.ar">CONSULTAR POR EMAIL <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          <a class="button button--whatsapp" id="detail-whatsapp" href="#" target="_blank" rel="noopener noreferrer">CONSULTAR POR WHATSAPP <i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+        </div>
+      </section>
     </main>
     <footer class="site-footer">
       <div class="site-footer__main">
         <a class="brand" href="index.html" aria-label="Mapale, volver al inicio"><img class="brand__mark" src="assets/mapale-mark.png" alt="" /><img class="brand__wordmark" src="assets/mapale-wordmark.png" alt="Mapale" /></a>
-        <p>DESARROLLADORA Y CONSTRUCTORA<br />MÁS DE 40 AÑOS DE TRAYECTORIA</p>
+        <p>CONSTRUCTORA + DESARROLLADORA<br />MÁS DE 50 AÑOS DE TRAYECTORIA</p>
         <a href="#inicio">VOLVER ARRIBA <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
       </div>
       <div class="site-footer__bottom"><small>© <span class="year">2026</span> MAPALE</small><small>BUENOS AIRES, ARGENTINA</small><span>Hecho por <a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">zigodev</a></span></div>
     </footer>
+    <a class="whatsapp-float" href="#" data-company-whatsapp target="_blank" rel="noopener noreferrer" aria-label="Consultar por WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
     <script src="main.js"></script>
     <script src="site-content.js" defer></script>
   </body>

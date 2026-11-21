@@ -9,6 +9,7 @@ const workspace = document.querySelector("#workspace");
 const loginForm = document.querySelector("#login-form");
 const projectForm = document.querySelector("#project-form");
 const historyForm = document.querySelector("#history-form");
+const companyForm = document.querySelector("#company-form");
 const projectPicker = document.querySelector("#project-picker");
 const statusElement = document.querySelector("#editor-status");
 let token = "";
@@ -85,7 +86,7 @@ function saveProjectDraft() {
   if (!site || !selectedId) return;
   const project = projectById(selectedId);
   if (!project) return;
-  for (const key of ["title", "location", "type", "status", "summary", "description", "cover", "background", "imageMode", "imageNote"]) {
+  for (const key of ["title", "location", "neighborhood", "category", "type", "status", "year", "units", "summary", "description", "nearby", "mapUrl", "brochure", "cover", "background", "imageMode", "imageNote"]) {
     project[key] = field(projectForm, key).value.trim();
   }
   project.features = field(projectForm, "features").value.split("\n").map((item) => item.trim()).filter(Boolean);
@@ -98,7 +99,14 @@ function showProjectForm() {
   projectForm.hidden = !project;
   if (!project) return;
   document.querySelector("#project-form-title").textContent = project.title || "Nuevo desarrollo";
-  for (const key of ["title", "location", "type", "status", "summary", "description", "cover", "background", "imageMode", "imageNote", "featured"]) {
+  const categorySelect = field(projectForm, "category");
+  categorySelect.replaceChildren(...(site.categories || []).map((category) => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.label;
+    return option;
+  }));
+  for (const key of ["title", "location", "neighborhood", "category", "type", "status", "year", "units", "summary", "description", "nearby", "mapUrl", "brochure", "cover", "background", "imageMode", "imageNote", "featured"]) {
     setField(projectForm, key, project[key]);
   }
   setField(projectForm, "features", (project.features || []).join("\n"));
@@ -181,15 +189,32 @@ function saveHistoryDraft() {
   });
 }
 
+function renderCompanyForm() {
+  for (const key of ["businessLine", "tagline", "yearsLabel", "regions", "phone", "whatsapp", "email", "address", "whatsappMessage"]) {
+    setField(companyForm, key, site.company?.[key]);
+  }
+}
+
+function saveCompanyDraft() {
+  if (!site) return;
+  site.company ||= {};
+  for (const key of ["businessLine", "tagline", "yearsLabel", "regions", "phone", "whatsapp", "email", "address", "whatsappMessage"]) {
+    site.company[key] = field(companyForm, key).value.trim();
+  }
+}
+
 function showTab(name) {
   if (activeTab === "projects") saveProjectDraft();
-  else saveHistoryDraft();
+  else if (activeTab === "history") saveHistoryDraft();
+  else saveCompanyDraft();
   activeTab = name;
   document.querySelector("#projects-panel").hidden = name !== "projects";
   document.querySelector("#history-panel").hidden = name !== "history";
+  document.querySelector("#company-panel").hidden = name !== "company";
   document.querySelector("#tab-projects").classList.toggle("is-active", name === "projects");
   document.querySelector("#tab-history").classList.toggle("is-active", name === "history");
-  document.querySelector("#editor-heading").textContent = name === "projects" ? "Desarrollos" : "Historia";
+  document.querySelector("#tab-company").classList.toggle("is-active", name === "company");
+  document.querySelector("#editor-heading").textContent = name === "projects" ? "Desarrollos" : name === "history" ? "Historia" : "Datos de contacto";
 }
 
 function validImageReference(value) {
@@ -210,11 +235,16 @@ function validateSite() {
   if (!site.history.heroLine || !site.history.heroAccent || !site.history.heroIntro || !site.history.paragraphs.length) {
     throw new Error("Completá los textos principales de la historia.");
   }
+  if (!site.company?.email || !/^\S+@\S+\.\S+$/.test(site.company.email) || !/^\d{8,15}$/.test(site.company.whatsapp || "")) {
+    throw new Error("Revisá el email y el número internacional de WhatsApp en Datos de contacto.");
+  }
+  const categoryIds = new Set((site.categories || []).map((category) => category.id));
   const ids = new Set();
   for (const project of site.projects) {
-    if (!project.title || !project.location || !project.type || !project.summary || !project.description) {
+    if (!project.title || !project.location || !project.category || !project.type || !project.summary || !project.description) {
       throw new Error(`Completá nombre, ubicación, tipo y descripciones de ${project.title || "cada desarrollo"}.`);
     }
+    if (!categoryIds.has(project.category)) throw new Error(`Elegí una categoría válida para ${project.title}.`);
     if (project.id.startsWith("nuevo-")) {
       const base = slugify(project.title);
       let candidate = base;
@@ -225,7 +255,7 @@ function validateSite() {
     }
     if (!/^[a-z0-9-]+$/.test(project.id) || ids.has(project.id)) throw new Error(`La dirección de ${project.title} no es válida.`);
     ids.add(project.id);
-    for (const ref of [project.cover, project.background, ...(project.gallery || [])]) {
+    for (const ref of [project.cover, project.background, project.mapUrl, project.brochure, ...(project.gallery || [])]) {
       if (!validImageReference(ref)) throw new Error(`Revisá las URLs de las imágenes de ${project.title}.`);
     }
   }
@@ -239,6 +269,7 @@ async function publish() {
   try {
     saveProjectDraft();
     saveHistoryDraft();
+    saveCompanyDraft();
     validateSite();
     const latest = await readContent();
     if (latest.sha !== contentSha) throw new Error("El contenido cambió en GitHub desde que abriste el panel. Recargá para ver la versión nueva antes de publicar.");
@@ -272,17 +303,18 @@ function readImage(file) {
   });
 }
 
-async function uploadImage(file) {
-  const extensions = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" };
+async function uploadAsset(file) {
+  const extensions = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "application/pdf": "pdf" };
   const extension = extensions[file.type];
-  if (!extension) throw new Error("Usá una imagen PNG, JPG o WebP.");
-  if (file.size > 5 * 1024 * 1024) throw new Error("Cada imagen debe pesar menos de 5 MB.");
+  if (!extension) throw new Error("Usá una imagen PNG, JPG o WebP, o un PDF.");
+  const limit = file.type === "application/pdf" ? 12 : 5;
+  if (file.size > limit * 1024 * 1024) throw new Error(`El archivo debe pesar menos de ${limit} MB.`);
   const basename = slugify(file.name.replace(/\.[^.]+$/, ""));
   const path = `assets/uploads/${basename}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${extension}`;
   await github(`/contents/${apiPath(path)}`, {
     method: "PUT",
     body: JSON.stringify({
-      message: `Add image for Mapale: ${basename}`,
+      message: `Add asset for Mapale: ${basename}`,
       content: await readImage(file),
       branch
     })
@@ -296,8 +328,8 @@ async function uploadFromInput(input, target) {
   input.disabled = true;
   try {
     for (const [index, file] of files.entries()) {
-      setStatus(`Subiendo imagen ${index + 1} de ${files.length}…`);
-      const path = await uploadImage(file);
+      setStatus(`Subiendo archivo ${index + 1} de ${files.length}…`);
+      const path = await uploadAsset(file);
       const fieldName = target === "gallery" ? "gallery" : target;
       const destination = field(projectForm, fieldName);
       destination.value = target === "gallery" ? [destination.value.trim(), path].filter(Boolean).join("\n") : path;
@@ -331,6 +363,7 @@ loginForm.addEventListener("submit", async (event) => {
     renderProjectPicker();
     showProjectForm();
     renderHistoryForm();
+    renderCompanyForm();
     loginForm.reset();
     loginScreen.hidden = true;
     workspace.hidden = false;
@@ -345,6 +378,7 @@ loginForm.addEventListener("submit", async (event) => {
 
 document.querySelector("#tab-projects").addEventListener("click", () => showTab("projects"));
 document.querySelector("#tab-history").addEventListener("click", () => showTab("history"));
+document.querySelector("#tab-company").addEventListener("click", () => showTab("company"));
 document.querySelector("#publish-button").addEventListener("click", publish);
 document.querySelector("#logout-button").addEventListener("click", () => {
   if (dirty && !confirm("Hay cambios sin publicar. ¿Cerrar sesión igual?")) return;
@@ -358,7 +392,7 @@ document.querySelector("#logout-button").addEventListener("click", () => {
 });
 document.querySelector("#add-project").addEventListener("click", () => {
   saveProjectDraft();
-  const project = { id: `nuevo-${Date.now()}`, title: "", location: "", type: "Edificio residencial", status: "Consultá disponibilidad", summary: "", description: "", features: [], cover: "", background: "", gallery: [], imageMode: "photo", imageNote: "", featured: false };
+  const project = { id: `nuevo-${Date.now()}`, title: "", location: "", neighborhood: "", category: site.categories?.[0]?.id || "", type: "Edificio residencial", status: "Consultá disponibilidad", year: "", units: "", summary: "", description: "", nearby: "", mapUrl: "", brochure: "", features: [], cover: "", background: "", gallery: [], imageMode: "photo", imageNote: "", featured: false };
   site.projects.push(project);
   selectedId = project.id;
   renderProjectPicker();
@@ -388,11 +422,14 @@ document.querySelector("#move-project-up").addEventListener("click", () => moveP
 document.querySelector("#move-project-down").addEventListener("click", () => moveProject(1));
 projectForm.addEventListener("input", markDirty);
 historyForm.addEventListener("input", markDirty);
+companyForm.addEventListener("input", markDirty);
 projectForm.addEventListener("submit", (event) => event.preventDefault());
 historyForm.addEventListener("submit", (event) => event.preventDefault());
+companyForm.addEventListener("submit", (event) => event.preventDefault());
 document.querySelector("#cover-upload").addEventListener("change", (event) => uploadFromInput(event.target, "cover"));
 document.querySelector("#background-upload").addEventListener("change", (event) => uploadFromInput(event.target, "background"));
 document.querySelector("#gallery-upload").addEventListener("change", (event) => uploadFromInput(event.target, "gallery"));
+document.querySelector("#brochure-upload").addEventListener("change", (event) => uploadFromInput(event.target, "brochure"));
 window.addEventListener("beforeunload", (event) => {
   if (dirty) event.preventDefault();
 });

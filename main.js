@@ -51,7 +51,7 @@ function stopSlideshow() {
 
 function startSlideshow() {
   stopSlideshow();
-  if (slides.length && !reducedMotion.matches && !document.hidden) {
+  if (slides.length > 1 && !reducedMotion.matches && !document.hidden) {
     slideTimer = window.setInterval(() => showSlide(activeSlide + 1), 5000);
   }
 }
@@ -119,7 +119,8 @@ if (contactForm) {
       "",
       String(data.get("mensaje"))
     ].join("\n");
-    const mailto = `mailto:ventas@mapaleconstrucciones.com.ar?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const recipient = document.documentElement.dataset.companyEmail || "ventas@mapaleconstrucciones.com.ar";
+    const mailto = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     status.textContent = "Tu consulta está lista para enviarse desde tu aplicación de correo.";
     window.location.href = mailto;
   });
