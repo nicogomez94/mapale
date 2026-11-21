@@ -1,9 +1,3 @@
-const owner = "nicogomez94";
-const repository = "mapale";
-const branch = "main";
-const apiBase = `https://api.github.com/repos/${owner}/${repository}`;
-const contentPath = "content/site.json";
-
 const loginScreen = document.querySelector("#login-screen");
 const workspace = document.querySelector("#workspace");
 const loginForm = document.querySelector("#login-form");
@@ -12,9 +6,10 @@ const historyForm = document.querySelector("#history-form");
 const companyForm = document.querySelector("#company-form");
 const projectPicker = document.querySelector("#project-picker");
 const statusElement = document.querySelector("#editor-status");
+
 let token = "";
 let site = null;
-let contentSha = "";
+let contentVersion = 0;
 let selectedId = "";
 let activeTab = "projects";
 let dirty = false;
@@ -29,43 +24,21 @@ function markDirty() {
   setStatus("Hay cambios sin publicar.");
 }
 
-function encodeUtf8(value) {
-  const bytes = new TextEncoder().encode(value);
-  let binary = "";
-  for (let index = 0; index < bytes.length; index += 8192) {
-    binary += String.fromCharCode(...bytes.subarray(index, index + 8192));
-  }
-  return btoa(binary);
-}
-
-function decodeUtf8(value) {
-  const binary = atob(value.replace(/\s/g, ""));
-  return new TextDecoder().decode(Uint8Array.from(binary, (character) => character.charCodeAt(0)));
-}
-
-function apiPath(path) {
-  return path.split("/").map(encodeURIComponent).join("/");
-}
-
-async function github(path, options = {}) {
-  const response = await fetch(`${apiBase}${path}`, {
-    ...options,
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${token}`,
-      "X-GitHub-Api-Version": "2022-11-28",
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
-      ...options.headers
-    },
+async function api(path, options = {}) {
+  const headers = {
+    Accept: "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(options.json ? { "Content-Type": "application/json" } : {})
+  };
+  const response = await fetch(path, {
+    method: options.method || "GET",
+    headers,
+    body: options.json ? JSON.stringify(options.json) : options.body,
     cache: "no-store"
   });
   const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(body.message || `GitHub respondió ${response.status}`);
+  if (!response.ok) throw new Error(body.error || `El servidor respondió ${response.status}.`);
   return body;
-}
-
-async function readContent() {
-  return github(`/contents/${apiPath(contentPath)}?ref=${branch}`);
 }
 
 function field(form, name) {
@@ -86,9 +59,26 @@ function saveProjectDraft() {
   if (!site || !selectedId) return;
   const project = projectById(selectedId);
   if (!project) return;
-  for (const key of ["title", "location", "neighborhood", "category", "type", "status", "year", "units", "summary", "description", "nearby", "mapUrl", "brochure", "cover", "background", "imageMode", "imageNote"]) {
-    project[key] = field(projectForm, key).value.trim();
-  }
+  const keys = [
+    "title",
+    "location",
+    "neighborhood",
+    "category",
+    "type",
+    "status",
+    "year",
+    "units",
+    "summary",
+    "description",
+    "nearby",
+    "mapUrl",
+    "brochure",
+    "cover",
+    "background",
+    "imageMode",
+    "imageNote"
+  ];
+  for (const key of keys) project[key] = field(projectForm, key).value.trim();
   project.features = field(projectForm, "features").value.split("\n").map((item) => item.trim()).filter(Boolean);
   project.gallery = field(projectForm, "gallery").value.split("\n").map((item) => item.trim()).filter(Boolean);
   project.featured = field(projectForm, "featured").checked;
@@ -98,6 +88,7 @@ function showProjectForm() {
   const project = projectById(selectedId);
   projectForm.hidden = !project;
   if (!project) return;
+
   document.querySelector("#project-form-title").textContent = project.title || "Nuevo desarrollo";
   const categorySelect = field(projectForm, "category");
   categorySelect.replaceChildren(...(site.categories || []).map((category) => {
@@ -106,11 +97,31 @@ function showProjectForm() {
     option.textContent = category.label;
     return option;
   }));
-  for (const key of ["title", "location", "neighborhood", "category", "type", "status", "year", "units", "summary", "description", "nearby", "mapUrl", "brochure", "cover", "background", "imageMode", "imageNote", "featured"]) {
-    setField(projectForm, key, project[key]);
-  }
+
+  const keys = [
+    "title",
+    "location",
+    "neighborhood",
+    "category",
+    "type",
+    "status",
+    "year",
+    "units",
+    "summary",
+    "description",
+    "nearby",
+    "mapUrl",
+    "brochure",
+    "cover",
+    "background",
+    "imageMode",
+    "imageNote",
+    "featured"
+  ];
+  for (const key of keys) setField(projectForm, key, project[key]);
   setField(projectForm, "features", (project.features || []).join("\n"));
   setField(projectForm, "gallery", (project.gallery || []).join("\n"));
+
   const url = `desarrollo.html?id=${encodeURIComponent(project.id)}`;
   const link = document.querySelector("#project-public-url");
   link.href = url;
@@ -137,20 +148,25 @@ function renderProjectPicker() {
     });
     projectPicker.append(button);
   }
-  if (!site.projects.length) {
-    const empty = document.createElement("p");
-    empty.className = "empty-projects";
-    empty.textContent = "Todavía no hay desarrollos. Creá uno nuevo.";
-    projectPicker.append(empty);
-  }
 }
 
 function renderHistoryForm() {
   const history = site.history;
-  for (const key of ["heroLine", "heroAccent", "heroIntro", "sectionLine", "sectionAccent", "milestoneLine", "milestoneAccent", "homeLine", "homeAccent", "homeSummary"]) {
-    setField(historyForm, key, history[key]);
-  }
+  const keys = [
+    "heroLine",
+    "heroAccent",
+    "heroIntro",
+    "sectionLine",
+    "sectionAccent",
+    "milestoneLine",
+    "milestoneAccent",
+    "homeLine",
+    "homeAccent",
+    "homeSummary"
+  ];
+  for (const key of keys) setField(historyForm, key, history[key]);
   setField(historyForm, "paragraphs", (history.paragraphs || []).join("\n\n"));
+
   const grid = document.querySelector("#milestone-fields");
   grid.replaceChildren();
   (history.milestones || []).forEach((milestone, index) => {
@@ -179,10 +195,20 @@ function renderHistoryForm() {
 function saveHistoryDraft() {
   if (!site) return;
   const history = site.history;
-  for (const key of ["heroLine", "heroAccent", "heroIntro", "sectionLine", "sectionAccent", "milestoneLine", "milestoneAccent", "homeLine", "homeAccent", "homeSummary"]) {
-    history[key] = field(historyForm, key).value.trim();
-  }
-  history.paragraphs = field(historyForm, "paragraphs").value.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
+  const keys = [
+    "heroLine",
+    "heroAccent",
+    "heroIntro",
+    "sectionLine",
+    "sectionAccent",
+    "milestoneLine",
+    "milestoneAccent",
+    "homeLine",
+    "homeAccent",
+    "homeSummary"
+  ];
+  for (const key of keys) history[key] = field(historyForm, key).value.trim();
+  history.paragraphs = field(historyForm, "paragraphs").value.split(/\n\s*\n/).map((item) => item.trim()).filter(Boolean);
   historyForm.querySelectorAll("[data-milestone]").forEach((element) => {
     const index = Number(element.dataset.milestone);
     history.milestones[index][element.dataset.key] = element.value.trim();
@@ -190,17 +216,15 @@ function saveHistoryDraft() {
 }
 
 function renderCompanyForm() {
-  for (const key of ["businessLine", "tagline", "yearsLabel", "regions", "phone", "whatsapp", "email", "address", "whatsappMessage"]) {
-    setField(companyForm, key, site.company?.[key]);
-  }
+  const keys = ["businessLine", "tagline", "yearsLabel", "regions", "phone", "whatsapp", "email", "address", "whatsappMessage"];
+  for (const key of keys) setField(companyForm, key, site.company?.[key]);
 }
 
 function saveCompanyDraft() {
   if (!site) return;
   site.company ||= {};
-  for (const key of ["businessLine", "tagline", "yearsLabel", "regions", "phone", "whatsapp", "email", "address", "whatsappMessage"]) {
-    site.company[key] = field(companyForm, key).value.trim();
-  }
+  const keys = ["businessLine", "tagline", "yearsLabel", "regions", "phone", "whatsapp", "email", "address", "whatsappMessage"];
+  for (const key of keys) site.company[key] = field(companyForm, key).value.trim();
 }
 
 function showTab(name) {
@@ -217,7 +241,7 @@ function showTab(name) {
   document.querySelector("#editor-heading").textContent = name === "projects" ? "Desarrollos" : name === "history" ? "Historia" : "Datos de contacto";
 }
 
-function validImageReference(value) {
+function validReference(value) {
   if (!value) return true;
   try {
     const url = new URL(value, location.href);
@@ -236,13 +260,14 @@ function validateSite() {
     throw new Error("Completá los textos principales de la historia.");
   }
   if (!site.company?.email || !/^\S+@\S+\.\S+$/.test(site.company.email) || !/^\d{8,15}$/.test(site.company.whatsapp || "")) {
-    throw new Error("Revisá el email y el número internacional de WhatsApp en Datos de contacto.");
+    throw new Error("Revisá el email y el número internacional de WhatsApp.");
   }
+
   const categoryIds = new Set((site.categories || []).map((category) => category.id));
   const ids = new Set();
   for (const project of site.projects) {
     if (!project.title || !project.location || !project.category || !project.type || !project.summary || !project.description) {
-      throw new Error(`Completá nombre, ubicación, tipo y descripciones de ${project.title || "cada desarrollo"}.`);
+      throw new Error(`Completá nombre, ubicación, categoría, tipo y descripciones de ${project.title || "cada desarrollo"}.`);
     }
     if (!categoryIds.has(project.category)) throw new Error(`Elegí una categoría válida para ${project.title}.`);
     if (project.id.startsWith("nuevo-")) {
@@ -253,73 +278,37 @@ function validateSite() {
       if (selectedId === project.id) selectedId = candidate;
       project.id = candidate;
     }
-    if (!/^[a-z0-9-]+$/.test(project.id) || ids.has(project.id)) throw new Error(`La dirección de ${project.title} no es válida.`);
+    if (!/^[a-z0-9-]+$/.test(project.id) || ids.has(project.id)) throw new Error(`La dirección interna de ${project.title} no es válida.`);
     ids.add(project.id);
-    for (const ref of [project.cover, project.background, project.mapUrl, project.brochure, ...(project.gallery || [])]) {
-      if (!validImageReference(ref)) throw new Error(`Revisá las URLs de las imágenes de ${project.title}.`);
+    for (const reference of [project.cover, project.background, project.mapUrl, project.brochure, ...(project.gallery || [])]) {
+      if (!validReference(reference)) throw new Error(`Revisá los enlaces de ${project.title}.`);
     }
   }
 }
 
 async function publish() {
-  if (!token || !site) return;
   const button = document.querySelector("#publish-button");
   button.disabled = true;
-  setStatus("Guardando cambios en GitHub…");
+  setStatus("Guardando cambios en la base de datos…");
   try {
     saveProjectDraft();
     saveHistoryDraft();
     saveCompanyDraft();
     validateSite();
-    const latest = await readContent();
-    if (latest.sha !== contentSha) throw new Error("El contenido cambió en GitHub desde que abriste el panel. Recargá para ver la versión nueva antes de publicar.");
-    const saved = await github(`/contents/${apiPath(contentPath)}`, {
+    const saved = await api("/api/admin/content", {
       method: "PUT",
-      body: JSON.stringify({
-        message: "Update Mapale site content from admin panel",
-        content: encodeUtf8(`${JSON.stringify(site, null, 2)}\n`),
-        sha: contentSha,
-        branch
-      })
+      json: { version: contentVersion, content: site }
     });
-    contentSha = saved.content.sha;
+    contentVersion = saved.version;
     dirty = false;
     renderProjectPicker();
     showProjectForm();
-    setStatus("Cambios publicados en GitHub. Render actualizará el sitio en unos minutos.");
+    setStatus("Cambios publicados correctamente.");
   } catch (error) {
     setStatus(error.message || "No se pudieron publicar los cambios.", true);
   } finally {
     button.disabled = false;
   }
-}
-
-function readImage(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result).split(",")[1]);
-    reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
-    reader.readAsDataURL(file);
-  });
-}
-
-async function uploadAsset(file) {
-  const extensions = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "application/pdf": "pdf" };
-  const extension = extensions[file.type];
-  if (!extension) throw new Error("Usá una imagen PNG, JPG o WebP, o un PDF.");
-  const limit = file.type === "application/pdf" ? 12 : 5;
-  if (file.size > limit * 1024 * 1024) throw new Error(`El archivo debe pesar menos de ${limit} MB.`);
-  const basename = slugify(file.name.replace(/\.[^.]+$/, ""));
-  const path = `assets/uploads/${basename}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${extension}`;
-  await github(`/contents/${apiPath(path)}`, {
-    method: "PUT",
-    body: JSON.stringify({
-      message: `Add asset for Mapale: ${basename}`,
-      content: await readImage(file),
-      branch
-    })
-  });
-  return path;
 }
 
 async function uploadFromInput(input, target) {
@@ -329,15 +318,16 @@ async function uploadFromInput(input, target) {
   try {
     for (const [index, file] of files.entries()) {
       setStatus(`Subiendo archivo ${index + 1} de ${files.length}…`);
-      const path = await uploadAsset(file);
-      const fieldName = target === "gallery" ? "gallery" : target;
-      const destination = field(projectForm, fieldName);
-      destination.value = target === "gallery" ? [destination.value.trim(), path].filter(Boolean).join("\n") : path;
+      const formData = new FormData();
+      formData.append("file", file);
+      const uploaded = await api("/api/admin/assets", { method: "POST", body: formData });
+      const destination = field(projectForm, target === "gallery" ? "gallery" : target);
+      destination.value = target === "gallery" ? [destination.value.trim(), uploaded.path].filter(Boolean).join("\n") : uploaded.path;
     }
     markDirty();
-    setStatus("Imágenes subidas. Publicá los cambios para agregarlas a la ficha.");
+    setStatus("Archivos subidos. Publicá los cambios para agregarlos a la ficha.");
   } catch (error) {
-    setStatus(error.message || "No se pudo subir la imagen.", true);
+    setStatus(error.message || "No se pudo subir el archivo.", true);
   } finally {
     input.value = "";
     input.disabled = false;
@@ -346,19 +336,18 @@ async function uploadFromInput(input, target) {
 
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const candidate = document.querySelector("#github-token").value.trim();
   const button = loginForm.querySelector("button[type=submit]");
   const loginStatus = document.querySelector("#login-status");
-  if (!candidate) return;
-  token = candidate;
+  const username = field(loginForm, "username").value.trim();
+  const password = field(loginForm, "password").value;
   button.disabled = true;
   setStatus("Comprobando acceso…", false, loginStatus);
   try {
-    const repo = await github("");
-    if (!repo.permissions?.push) throw new Error("Este token no tiene permiso de escritura en el repositorio Mapale.");
-    const content = await readContent();
-    site = JSON.parse(decodeUtf8(content.content));
-    contentSha = content.sha;
+    const session = await api("/api/admin/login", { method: "POST", json: { username, password } });
+    token = session.token;
+    const record = await api("/api/admin/content");
+    site = record.content;
+    contentVersion = record.version;
     selectedId = site.projects[0]?.id || "";
     renderProjectPicker();
     showProjectForm();
@@ -384,7 +373,7 @@ document.querySelector("#logout-button").addEventListener("click", () => {
   if (dirty && !confirm("Hay cambios sin publicar. ¿Cerrar sesión igual?")) return;
   token = "";
   site = null;
-  contentSha = "";
+  contentVersion = 0;
   selectedId = "";
   dirty = false;
   workspace.hidden = true;
@@ -392,7 +381,29 @@ document.querySelector("#logout-button").addEventListener("click", () => {
 });
 document.querySelector("#add-project").addEventListener("click", () => {
   saveProjectDraft();
-  const project = { id: `nuevo-${Date.now()}`, title: "", location: "", neighborhood: "", category: site.categories?.[0]?.id || "", type: "Edificio residencial", status: "Consultá disponibilidad", year: "", units: "", summary: "", description: "", nearby: "", mapUrl: "", brochure: "", features: [], cover: "", background: "", gallery: [], imageMode: "photo", imageNote: "", featured: false };
+  const project = {
+    id: `nuevo-${Date.now()}`,
+    title: "",
+    location: "",
+    neighborhood: "",
+    category: site.categories?.[0]?.id || "",
+    type: "Edificio residencial",
+    status: "Consultá disponibilidad",
+    year: "",
+    units: "",
+    summary: "",
+    description: "",
+    nearby: "",
+    mapUrl: "",
+    brochure: "",
+    features: [],
+    cover: "",
+    background: "",
+    gallery: [],
+    imageMode: "photo",
+    imageNote: "",
+    featured: false
+  };
   site.projects.push(project);
   selectedId = project.id;
   renderProjectPicker();
@@ -409,6 +420,7 @@ document.querySelector("#delete-project").addEventListener("click", () => {
   showProjectForm();
   markDirty();
 });
+
 function moveProject(offset) {
   saveProjectDraft();
   const index = site.projects.findIndex((project) => project.id === selectedId);
@@ -418,6 +430,7 @@ function moveProject(offset) {
   renderProjectPicker();
   markDirty();
 }
+
 document.querySelector("#move-project-up").addEventListener("click", () => moveProject(-1));
 document.querySelector("#move-project-down").addEventListener("click", () => moveProject(1));
 projectForm.addEventListener("input", markDirty);

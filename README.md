@@ -10,13 +10,22 @@ Sitio de Mapale, constructora y desarrolladora con más de 50 años de trayector
 - `desarrollo.html?id=...`: ficha individual de cada desarrollo.
 - `admin.html`: panel de edición de contenidos.
 
+## Arquitectura
+
+- El sitio público se sirve como HTML, CSS y JavaScript estático.
+- `server/` contiene la API Express, autenticación del panel, carga de archivos y persistencia con Prisma/PostgreSQL.
+- `content/site.json` se usa para inicializar la base y como respaldo de lectura en entornos sin API.
+- En producción nginx sirve el sitio y deriva `/api/` y `/health` al servicio privado de Node.
+
 ## Desarrollo local
 
 ```bash
-python3 -m http.server 8788
+npm install
+npm run db:generate
+npm start
 ```
 
-Abrir `http://localhost:8788/`.
+La API requiere las variables de `server/.env.example` y una base PostgreSQL. El sitio público puede revisarse sin API con `python3 -m http.server 8788`; en ese caso usa el respaldo `content/site.json`.
 
 ## Contenido y recursos
 
@@ -28,16 +37,12 @@ Abrir `http://localhost:8788/`.
 
 ## Panel autoadministrable
 
-Abrir `https://mapale.onrender.com/admin.html`. El panel usa la API de GitHub para guardar `content/site.json` y las imágenes nuevas en este repositorio. Cada guardado crea un commit en `main`; el despliegue automático de Render publica la nueva versión. No hay base de datos ni servidor de administración adicional.
-
-Para acceder, crear un **fine-grained personal access token** en GitHub con estas opciones:
-
-1. Resource owner: `nicogomez94`.
-2. Repository access: **Only select repositories** → `mapale`.
-3. Repository permissions: **Contents → Read and write**. Metadata se concede automáticamente para lectura.
-
-Pegar el token en el panel. Se conserva solo en la memoria de esa pestaña; al recargar se vuelve a pedir. No agregarlo al repositorio, a una URL ni a capturas de pantalla. Si otra persona debe editar, darle acceso de escritura al repositorio y pedirle que cree su propio token limitado a Mapale.
+Abrir `/admin.html` en el mismo dominio del sitio. El panel autentica contra la API privada y guarda el contenido en PostgreSQL. El token de sesión permanece únicamente en memoria durante la pestaña actual. El usuario inicial se configura con `ADMIN_USERNAME` y `ADMIN_PASSWORD`; las contraseñas se almacenan con hash bcrypt y nunca se incluyen en el repositorio.
 
 Se pueden crear, editar, quitar y ordenar desarrollos; elegir una categoría; modificar título, ubicación, barrio, estado, año, unidades, descripciones, conectividad, mapa, características, imagen principal, fondo, galería, brochure y presencia en portada. La historia permite editar cabecera, relato, principios y resumen de portada. La sección Datos de contacto administra teléfono, WhatsApp, email y dirección de oficina. Las imágenes se suben al repositorio en `assets/uploads/` (PNG, JPG o WebP, máximo 5 MB por archivo) y los brochures se admiten en PDF hasta 12 MB. Tras subir archivos hay que pulsar **Publicar cambios** para incluirlos en la ficha.
 
 Los identificadores de las fichas existentes no cambian al editar el título. Una ficha nueva recibe una URL basada en su nombre cuando se publica por primera vez. Si dos editores modifican el contenido al mismo tiempo, el panel evita sobreescribir el cambio ajeno y solicita recargar.
+
+## Producción
+
+El despliegue productivo vive aislado en `/var/www/sites/mapale`, con servicio systemd, base PostgreSQL y configuración nginx propios. Los archivos subidos se conservan fuera del checkout en `shared/uploads` para que una actualización de código no los elimine.

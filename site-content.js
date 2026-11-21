@@ -1,4 +1,4 @@
-const contentUrl = "content/site.json";
+const contentUrls = ["/api/content", "content/site.json"];
 
 function safeImageUrl(value) {
   if (typeof value !== "string" || !value.trim()) return "";
@@ -271,9 +271,19 @@ function renderProjectDetail(projects, categories, company) {
 
 async function loadSiteContent() {
   try {
-    const response = await fetch(contentUrl, { cache: "no-store" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const site = await response.json();
+    let site;
+    let lastError;
+    for (const url of contentUrls) {
+      try {
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        site = await response.json();
+        break;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    if (!site) throw lastError || new Error("No hay una fuente de contenido disponible.");
     const projects = site.projects || [];
     const categories = site.categories || [];
     const company = site.company || {};
