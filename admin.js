@@ -8,6 +8,7 @@ const projectPicker = document.querySelector("#project-picker");
 const projectDialog = document.querySelector("#project-dialog");
 const imageThumbnails = document.querySelector("#image-thumbnails");
 const statusElement = document.querySelector("#editor-status");
+const debugReady = window.MapaleDebug?.initialize() || Promise.resolve(false);
 
 let token = "";
 let site = null;
@@ -488,6 +489,7 @@ document.querySelector("#logout-button").addEventListener("click", () => {
   loginScreen.hidden = false;
 });
 document.querySelector("#add-project").addEventListener("click", () => {
+  const debugProject = window.MapaleDebug?.projectDefaults();
   const project = {
     id: `nuevo-${Date.now()}`,
     title: "",
@@ -509,7 +511,8 @@ document.querySelector("#add-project").addEventListener("click", () => {
     gallery: [],
     imageMode: "photo",
     imageNote: "",
-    featured: false
+    featured: false,
+    ...(debugProject || {})
   };
   site.projects.push(project);
   selectedId = project.id;
@@ -556,6 +559,7 @@ projectDialog.addEventListener("cancel", (event) => {
   event.preventDefault();
   closeProjectDialog(false);
 });
+debugReady.then(() => window.MapaleDebug?.prefillForm(loginForm, "adminLogin"));
 window.addEventListener("beforeunload", (event) => {
   if (dirty) event.preventDefault();
 });

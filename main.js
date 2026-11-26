@@ -1,5 +1,6 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const mobileNav = document.querySelector(".mobile-nav");
+const debugReady = window.MapaleDebug?.initialize() || Promise.resolve(false);
 
 function closeMenu() {
   menuToggle.setAttribute("aria-expanded", "false");
@@ -102,6 +103,7 @@ document.querySelectorAll(".year").forEach((element) => {
 
 const contactForm = document.querySelector("#contact-form");
 if (contactForm) {
+  debugReady.then(() => window.MapaleDebug?.prefillForm(contactForm, "contact"));
   contactForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const status = contactForm.querySelector(".form-status");

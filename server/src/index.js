@@ -14,6 +14,7 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const port = Number(process.env.PORT || 3014);
 const jwtSecret = process.env.JWT_SECRET;
 const uploadDir = process.env.UPLOAD_DIR || path.resolve(__dirname, "../uploads");
+const debugMode = process.env.DEBUG_MODE === "true";
 
 if (!process.env.DATABASE_URL || !jwtSecret) {
   throw new Error("DATABASE_URL y JWT_SECRET son obligatorios.");
@@ -102,6 +103,14 @@ app.get("/api/content", async (_request, response) => {
   }
   response.set("Cache-Control", "no-store");
   response.json(record.data);
+});
+
+app.get("/api/config", (_request, response) => {
+  response.set("Cache-Control", "no-store");
+  response.json({
+    debug: debugMode,
+    adminUsername: debugMode ? String(process.env.ADMIN_USERNAME || "") : ""
+  });
 });
 
 app.post("/api/admin/login", loginLimiter, async (request, response) => {
