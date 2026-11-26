@@ -2,7 +2,6 @@ const loginScreen = document.querySelector("#login-screen");
 const workspace = document.querySelector("#workspace");
 const loginForm = document.querySelector("#login-form");
 const projectForm = document.querySelector("#project-form");
-const historyForm = document.querySelector("#history-form");
 const companyForm = document.querySelector("#company-form");
 const projectPicker = document.querySelector("#project-picker");
 const projectDialog = document.querySelector("#project-dialog");
@@ -249,71 +248,6 @@ function closeProjectDialog(save) {
   renderProjectPicker();
 }
 
-function renderHistoryForm() {
-  const history = site.history;
-  const keys = [
-    "heroLine",
-    "heroAccent",
-    "heroIntro",
-    "sectionLine",
-    "sectionAccent",
-    "milestoneLine",
-    "milestoneAccent",
-    "homeLine",
-    "homeAccent",
-    "homeSummary"
-  ];
-  for (const key of keys) setField(historyForm, key, history[key]);
-  setField(historyForm, "paragraphs", (history.paragraphs || []).join("\n\n"));
-
-  const grid = document.querySelector("#milestone-fields");
-  grid.replaceChildren();
-  (history.milestones || []).forEach((milestone, index) => {
-    const group = document.createElement("div");
-    const heading = document.createElement("h3");
-    heading.textContent = `PRINCIPIO ${String(index + 1).padStart(2, "0")}`;
-    const titleLabel = document.createElement("label");
-    titleLabel.textContent = "Título";
-    const titleInput = document.createElement("input");
-    titleInput.value = milestone.title || "";
-    titleInput.dataset.milestone = String(index);
-    titleInput.dataset.key = "title";
-    titleLabel.append(titleInput);
-    const textLabel = document.createElement("label");
-    textLabel.textContent = "Texto";
-    const textInput = document.createElement("textarea");
-    textInput.value = milestone.text || "";
-    textInput.dataset.milestone = String(index);
-    textInput.dataset.key = "text";
-    textLabel.append(textInput);
-    group.append(heading, titleLabel, textLabel);
-    grid.append(group);
-  });
-}
-
-function saveHistoryDraft() {
-  if (!site) return;
-  const history = site.history;
-  const keys = [
-    "heroLine",
-    "heroAccent",
-    "heroIntro",
-    "sectionLine",
-    "sectionAccent",
-    "milestoneLine",
-    "milestoneAccent",
-    "homeLine",
-    "homeAccent",
-    "homeSummary"
-  ];
-  for (const key of keys) history[key] = field(historyForm, key).value.trim();
-  history.paragraphs = field(historyForm, "paragraphs").value.split(/\n\s*\n/).map((item) => item.trim()).filter(Boolean);
-  historyForm.querySelectorAll("[data-milestone]").forEach((element) => {
-    const index = Number(element.dataset.milestone);
-    history.milestones[index][element.dataset.key] = element.value.trim();
-  });
-}
-
 function renderCompanyForm() {
   const keys = ["businessLine", "tagline", "yearsLabel", "regions", "phone", "whatsapp", "email", "address", "whatsappMessage"];
   for (const key of keys) setField(companyForm, key, site.company?.[key]);
@@ -330,16 +264,13 @@ function showTab(name) {
   if (activeTab === "projects") {
     if (projectDialog.open) saveProjectDraft();
   }
-  else if (activeTab === "history") saveHistoryDraft();
   else saveCompanyDraft();
   activeTab = name;
   document.querySelector("#projects-panel").hidden = name !== "projects";
-  document.querySelector("#history-panel").hidden = name !== "history";
   document.querySelector("#company-panel").hidden = name !== "company";
   document.querySelector("#tab-projects").classList.toggle("is-active", name === "projects");
-  document.querySelector("#tab-history").classList.toggle("is-active", name === "history");
   document.querySelector("#tab-company").classList.toggle("is-active", name === "company");
-  document.querySelector("#editor-heading").textContent = name === "projects" ? "Desarrollos" : name === "history" ? "Historia" : "Datos de contacto";
+  document.querySelector("#editor-heading").textContent = name === "projects" ? "Desarrollos" : "Datos de contacto";
 }
 
 function validReference(value) {
@@ -393,7 +324,6 @@ async function publish() {
   setStatus("Guardando cambios en la base de datos…");
   try {
     if (projectDialog.open) saveProjectDraft();
-    saveHistoryDraft();
     saveCompanyDraft();
     validateSite();
     const saved = await api("/api/admin/content", {
@@ -460,7 +390,6 @@ loginForm.addEventListener("submit", async (event) => {
     selectedId = site.projects[0]?.id || "";
     renderProjectPicker();
     showProjectForm();
-    renderHistoryForm();
     renderCompanyForm();
     loginForm.reset();
     loginScreen.hidden = true;
@@ -475,7 +404,6 @@ loginForm.addEventListener("submit", async (event) => {
 });
 
 document.querySelector("#tab-projects").addEventListener("click", () => showTab("projects"));
-document.querySelector("#tab-history").addEventListener("click", () => showTab("history"));
 document.querySelector("#tab-company").addEventListener("click", () => showTab("company"));
 document.querySelector("#publish-button").addEventListener("click", publish);
 document.querySelector("#logout-button").addEventListener("click", () => {
@@ -544,10 +472,8 @@ function moveProject(offset) {
 document.querySelector("#move-project-up").addEventListener("click", () => moveProject(-1));
 document.querySelector("#move-project-down").addEventListener("click", () => moveProject(1));
 projectForm.addEventListener("input", markDirty);
-historyForm.addEventListener("input", markDirty);
 companyForm.addEventListener("input", markDirty);
 projectForm.addEventListener("submit", (event) => event.preventDefault());
-historyForm.addEventListener("submit", (event) => event.preventDefault());
 companyForm.addEventListener("submit", (event) => event.preventDefault());
 document.querySelector("#gallery-upload").addEventListener("change", (event) => uploadFromInput(event.target, "images"));
 document.querySelector("#brochure-upload").addEventListener("change", (event) => uploadFromInput(event.target, "brochure"));
