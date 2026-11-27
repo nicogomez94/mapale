@@ -25,6 +25,28 @@ button { cursor: pointer; }
 img { display: block; max-width: 100%; }
 ::selection { color: var(--white); background: var(--green-dark); }
 
+.preview-exit {
+  position: fixed;
+  z-index: 90;
+  right: 18px;
+  bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 13px;
+  border: 1px solid rgba(255, 255, 255, .3);
+  color: var(--white);
+  background: rgba(16, 43, 32, .92);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  font: 500 8px var(--mono);
+  letter-spacing: .04em;
+  backdrop-filter: blur(8px);
+}
+
+.preview-exit:hover {
+  background: var(--green-dark);
+}
+
 .grain {
   position: fixed;
   inset: 0;
