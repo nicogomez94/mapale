@@ -64,9 +64,21 @@ body {
   backdrop-filter: blur(12px);
 }
 
-.construction-card__logo {
-  width: min(310px, 72%);
+.construction-card__identity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: min(405px, 86%);
   margin-bottom: 58px;
+}
+
+.construction-card__mark {
+  width: 62px;
+  flex: none;
+}
+
+.construction-card__logo {
+  width: min(310px, calc(100% - 77px));
   filter: grayscale(1) invert(1);
 }
 
@@ -125,9 +137,18 @@ body {
     padding: 38px 28px;
   }
 
-  .construction-card__logo {
-    width: min(250px, 82%);
+  .construction-card__identity {
+    width: min(315px, 94%);
+    gap: 12px;
     margin-bottom: 44px;
+  }
+
+  .construction-card__mark {
+    width: 49px;
+  }
+
+  .construction-card__logo {
+    width: min(250px, calc(100% - 61px));
   }
 
   .construction-card h1 {
