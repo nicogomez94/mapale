@@ -64,6 +64,12 @@ body {
   backdrop-filter: blur(12px);
 }
 
+.construction-card__logo {
+  width: min(310px, 72%);
+  margin-bottom: 58px;
+  filter: grayscale(1) invert(1);
+}
+
 .construction-card__eyebrow,
 .construction-card__brand {
   font: 500 10px var(--mono);
@@ -117,6 +123,11 @@ body {
 
   .construction-card {
     padding: 38px 28px;
+  }
+
+  .construction-card__logo {
+    width: min(250px, 82%);
+    margin-bottom: 44px;
   }
 
   .construction-card h1 {
